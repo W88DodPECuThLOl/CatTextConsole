@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset=”UTF-8″>
+		<title>CatTextConsole Test</title>
+		<script src="./js/catTextScreenLayer.js"></script>
+		<script src="./js/catTextScreenLayerControler.js"></script>
+		<script src="./js/catTextScreen.js"></script>
+		<script src="./js/catKey.js"></script>
+		<link rel="stylesheet" href="./css/catTextScreen.css">
+	</head>
+	<body>
+		<div id="catOutput" class="console"></div>
+
+		<script>
+			var catKey = new CatKey(document);
+			var catTextScreen = new CatTextScreen(80, 25);
+
+			// テスト
+			const initialText = "猫テキストコンソール Version 0.00.00";
+			for(chr of initialText) { catTextScreen.putch32(chr.codePointAt(0)); }
+			catTextScreen.putch32(13); // 改行
+			catTextScreen.setColor(0xFF0000); // 描画色設定 RGB
+			for(let i = 0x20; i <= 0x3F; ++i) { catTextScreen.putch32(i); }
+			catTextScreen.putch32(13); // 改行
+			catTextScreen.setColor(0x00FF00);
+			for(let i = 0x20; i <= 0x3F; ++i) { catTextScreen.putch32(i); }
+			catTextScreen.putch32(13); // 改行
+			catTextScreen.setColor(0x0000FF);
+			for(let i = 0x20; i <= 0x3F; ++i) { catTextScreen.putch32(i); }
+			catTextScreen.putch32(13); // 改行
+			catTextScreen.setColor(0xFFFFFF);
+			for(let i = 0x20; i <= 0x3F; ++i) { catTextScreen.putch32(i); }
+			catTextScreen.putch32(13); // 改行
+			for(let j = 1; j <= 3; ++j) {
+				catTextScreen.setAttr(j); // 表示属性 0～3:回転
+				for(let i = 0x20; i <= 0x3F; ++i) { catTextScreen.putch32(i); }
+				catTextScreen.putch32(13); // 改行
+			}
+			catTextScreen.setAttr(0);
+			// 制御コード以外を描画
+			for(let j = 2; j <= 8; ++j) {
+				// カーソル位置を設定
+				catTextScreen.setCursor(40,j-1);
+				for(let i = 0; i < 32; ++i) {
+					const codePoint = j*32+i;
+					if(codePoint != 0x7F) {
+						catTextScreen.putch32(codePoint);
+					}
+				}
+				catTextScreen.putch32(13); // 改行
+			}
+
+			// 画面クリア
+			//catTextScreen.putch32(0x0C);
+
+			// 更新処理
+			function update()
+			{
+				// キー入力
+				const keyCode = catKey.dequeueKeyBuffer();
+				if(keyCode) {
+					// 入力されてたらテキスト画面の制御に流し込む
+					catTextScreen.putch32(keyCode);
+				}
+				// テキスト描画
+				if(catTextScreen.isModified()) {
+					// 変更されている時だけ描画する
+					document.getElementById("catOutput").innerHTML = catTextScreen.draw();
+				}
+				// VSync待ち
+				requestAnimationFrame(()=>update());
+			}
+
+			// ページ読み込み後に実行される
+			window.onload = function() { update(); }
+		</script>
+	</body>
+</html>
