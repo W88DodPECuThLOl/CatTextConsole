@@ -3,22 +3,21 @@
 	<head>
 		<meta charset=”UTF-8″>
 		<title>CatTextConsole Test</title>
-		<script src="./js/catTextScreenLayer.js"></script>
-		<script src="./js/catTextScreenLayerControler.js"></script>
-		<script src="./js/catTextScreen.js"></script>
-		<script src="./js/catKey.js"></script>
 		<link rel="stylesheet" href="./css/catTextScreen.css">
 	</head>
 	<body>
 		<div id="catOutput" class="console"></div>
 
-		<script>
+		<script type="module">
+			import CatKey from './js/cat/catKey.js';
+			import CatTextScreen from './js/cat/catTextScreen.js';
+
 			var catKey = new CatKey(document);
 			var catTextScreen = new CatTextScreen(80, 25);
 
 			// テスト
 			const initialText = "猫テキストコンソール Version 0.00.00";
-			for(chr of initialText) { catTextScreen.putch32(chr.codePointAt(0)); }
+			for(let chr of initialText) { catTextScreen.putch32(chr.codePointAt(0)); }
 			catTextScreen.putch32(13); // 改行
 			catTextScreen.setColor(0xFF0000); // 描画色設定 RGB
 			for(let i = 0x20; i <= 0x3F; ++i) { catTextScreen.putch32(i); }
@@ -41,18 +40,19 @@
 			// 制御コード以外を描画
 			for(let j = 2; j <= 8; ++j) {
 				// カーソル位置を設定
-				catTextScreen.setCursor(40,j-1);
+				catTextScreen.setCursor(40, j - 1);
+				// 文字描画
 				for(let i = 0; i < 32; ++i) {
-					const codePoint = j*32+i;
-					if(codePoint != 0x7F) {
-						catTextScreen.putch32(codePoint);
+					const codePoint = j * 32 + i;			// UTF-32
+					if(codePoint != 0x7F) {					// 0x7Fは「DEL」なのでスキップ
+						catTextScreen.putch32(codePoint);	// 1文字描画
 					}
 				}
 				catTextScreen.putch32(13); // 改行
 			}
 
 			// 画面クリア
-			//catTextScreen.putch32(0x0C);
+			//catTextScreen.putch32(0x0C); // 0x0Cは制御コードで、画面クリア
 
 			// 更新処理
 			function update()

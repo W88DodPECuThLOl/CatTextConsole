@@ -1,6 +1,6 @@
 # sandbox CatTextConsole
 
-## これは何？
+## What is this? これは何？
 
 - 猫御用達のテキストコンソールです
 
@@ -8,15 +8,15 @@
 
 ライセンスは「LICENSE.md」を見てください。
 
-## 使い方
+## How to use 使い方
 
 todo
 
-## デモ
+## Demo デモ
 
 https://w88dodpecuthlol.github.io/CatTextConsole/
 
-## To do
+## To do やること
 
 - Deleteの動き修正
 - Insertの実装
