@@ -167,7 +167,9 @@ export default class {
 	 */
 	isKeyDown(keyCode)
 	{
-		if(keyCode && this.keyDown.has(keyCode)) {
+		if(keyCode
+//			&& (this.keyDown.findIndex(keyCode) >= 0)
+		) {
 			return !!this.keyDown[keyCode];
 		}
 		return false;
@@ -178,9 +180,7 @@ export default class {
 	 * @returns {number|string} キーコード。押下されていなかったら0を返す。
 	 */
 	inKey() {
-		if(this.#lastKeyCode
-			&& this.keyDown.has(this.#lastKeyCode)
-			&& this.keyDown[this.#lastKeyCode]) {
+		if(this.#lastKeyCode && this.keyDown[this.#lastKeyCode]) {
 			return this.#lastKeyCode;
 		}
 		return 0;
