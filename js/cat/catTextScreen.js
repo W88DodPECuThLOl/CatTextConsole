@@ -196,11 +196,21 @@ export default class {
 	/**
 	 * 文字の属性を取得する
 	 * @param {number} layer レイヤ番号
-	 * @returns 文字の属性
+	 * @returns {number} 文字の属性
 	 */
 	getAttr(layer) {
 		layer = (typeof layer === 'undefined') ? this.#defaultLayer : layer;
 		return this.#textLayerControler[layer].getAttr();
+	}
+
+	/**
+	 * カーソルのある行のテキストを取得する
+	 * @param {number} layer レイヤ番号
+	 * @returns {string} １行の文字列
+	 */
+	getLine(layer) {
+		layer = (typeof layer === 'undefined') ? this.#defaultLayer : layer;
+		return this.#textLayerControler[layer].getLine();
 	}
 
 	/**

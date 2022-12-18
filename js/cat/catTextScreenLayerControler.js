@@ -117,6 +117,12 @@ export default class {
 		this.#target.setCursor(this.#cursor.x, this.#cursor.y);
 	}
 
+	/**
+	 * 
+	 * @param {{x, y}} pos 
+	 * @param {number} value 
+	 * @returns {{x, y}}
+	 */
 	#addCursor(pos,value)
 	{
 		const width = this.#target.getScreenWidth();
@@ -490,7 +496,7 @@ while(end.x != this.#cursor.x || end.y != this.#cursor.y) {
 
 	/**
 	 * 文字の属性を取得する
-	 * @returns 文字の属性
+	 * @returns {number} 文字の属性
 	 */
 	getAttr() { return this.#target.getAttr(); }
 
@@ -501,6 +507,27 @@ while(end.x != this.#cursor.x || end.y != this.#cursor.y) {
 	 * @returns {number} 属性
 	 */
 	getTextAttr(x,y) { return this.#target.getTextAttr(x, y); }
+
+	/**
+	 * カーソルのある行のテキストを取得する
+	 * @param {number} layer レイヤ番号
+	 * @returns {string} １行の文字列
+	 */
+	getLine() {
+		const y = this.getCursor().y;
+		let begin = this.#lineBegin(y);   // 開始位置
+		const end = this.#lineTextEnd(y); // 終了位置
+		let text = '';
+		while(begin.x != end.x || begin.y != end.y) {
+			let codePoint = this.#target.getCodePoint(begin.x, begin.y);
+			if(codePoint < 0x20) {
+				codePoint = 0x20;
+			}
+			text += String.fromCodePoint(codePoint);
+			begin = this.#addCursor(begin, 1); // 1文字進める
+		}
+		return text
+	}
 
 	/**
 	 * テキストが更新されたかどうかを取得する
