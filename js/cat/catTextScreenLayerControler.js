@@ -425,6 +425,15 @@ while(end.x != this.#cursor.x || end.y != this.#cursor.y) {
 	}
 
 	/**
+	 * 指定位置の文字を取得する
+	 * @param {number} x x座標(キャラクタ単位)
+	 * @param {number} y y座標(キャラクタ単位)
+	 * @return {number} 文字(UTF-32)
+	 */
+	getCodePoint(x, y) { return this.#target.getCodePoint(x, y); }
+
+
+	/**
 	 * 描画（するときに設定するHTML文字列の生成）
 	 * @returns {string} HTMLに設定する文字列
 	 */

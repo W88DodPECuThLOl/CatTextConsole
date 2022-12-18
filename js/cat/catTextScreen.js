@@ -109,6 +109,19 @@ export default class {
 	}
 
 	/**
+	 * 指定位置の文字を取得する
+	 * @param {number} x x座標(キャラクタ単位)
+	 * @param {number} y y座標(キャラクタ単位)
+	 * @param {number} layer レイヤ番号
+	 * @return {number} 文字(UTF-32)
+	 */
+	getCodePoint(x, y, layer)
+	{
+		layer = (typeof layer === 'undefined') ? this.#defaultLayer : layer;
+		return this.#textLayerControler[layer].getCodePoint(x, y);
+	}
+
+	/**
 	 * 描画（するときに設定するHTML文字列の生成）
 	 * @param {number} layer レイヤ番号
 	 * @returns HTMLに設定する文字列
