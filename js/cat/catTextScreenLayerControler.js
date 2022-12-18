@@ -377,6 +377,22 @@ while(end.x != this.#cursor.x || end.y != this.#cursor.y) {
 	}
 
 	/**
+	 * スクリーンサイズを変更する
+	 * 
+	 * ・カーソル位置は、左上(0,0)に設定される。
+	 * ・次の行に続いているかどうかのフラグは、リセットされる
+	 * @param {number} width 横幅(キャラクタ単位)
+	 * @param {number} height 高さ(キャラクタ単位)
+	 */
+	changeScreenSize(width, height) {
+		this.#target.changeScreenSize(width, height);
+		this.#target.setCursor(0, 0);
+		this.#prcnt = 0;
+		this.#cursor = {x:0, y:0};
+		this.#lineContinue = new Array(this.#target.getScreenHeight());
+	}
+
+	/**
 	 * １文字出力する
 	 * @param {number_Or_string} codePoint UTF-32の文字、または、制御文字列
 	 */
