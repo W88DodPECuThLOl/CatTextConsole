@@ -70,9 +70,9 @@ export default class {
 	 * キーの押下状態
 	 * 
 	 * 押されていればtrue。
-	 * @type {boolean[]}
+	 * @type {Map}
 	 */
-	keyDown;
+	#keyDown;
 
 	/**
 	 * 最後に押下されたキーコード
@@ -89,11 +89,8 @@ export default class {
 		// キー入力
 		const keyCode = self.#keyCodeConverter(e);
 		if(keyCode) {
-			self.keyDown[keyCode] = true;
 			// バッファに積む
 			self.enqueueKeyBuffer(keyCode);
-			// 最後に入力されたキーコードを覚えておく
-			this.#lastKeyCode = keyCode;
 		}
 	}
 
@@ -105,8 +102,17 @@ export default class {
 	#keyUpHandler(self, e) {
 		const keyCode = self.#keyCodeConverter(e);
 		if(keyCode) {
-			self.keyDown[keyCode] = false;
+			self.#keyUp(keyCode);
 		}
+	}
+
+	/**
+	 * 
+	 * @param {number|string} keyCode キーコード
+	 */
+	#keyUp(keyCode)
+	{
+		this.#keyDown[keyCode] = false;
 	}
 
 	/**
@@ -116,13 +122,13 @@ export default class {
 	 */
 	constructor(document, keyCodeConverter)
 	{
-		this.keyDown = new Array();
+		this.#keyDown = new Map();
 		this.#keyCodeConverter = keyCodeConverter ? keyCodeConverter : this.#defaultKeyConverter;
 		this.#keyBuffer = [];
 		this.#keyBufferSize = 16;
 		this.#lastKeyCode = '';
-		document.addEventListener("keydown", (e)=>this.#keyDownHandler(this, e), false);
-		document.addEventListener("keyup", (e)=>this.#keyUpHandler(this, e), false);
+		document.addEventListener('keydown', (e)=>this.#keyDownHandler(this, e), false);
+		document.addEventListener('keyup', (e)=>this.#keyUpHandler(this, e), false);
 	}
 
 	/**
@@ -131,6 +137,10 @@ export default class {
 	 * @returns {boolean} キューに入れれたら true
 	 */
 	enqueueKeyBuffer(keyCode) {
+		this.#keyDown[keyCode] = true;
+		// 最後に入力されたキーコードを覚えておく
+		this.#lastKeyCode = keyCode;
+		// キューに積む
 		if(this.#keyBuffer.length < this.#keyBufferSize) {
 			this.#keyBuffer.unshift(keyCode);
 			return true;
@@ -156,7 +166,7 @@ export default class {
 	 */
 	keyBufferClear() {
 		this.#keyBuffer.length = 0;
-		this.keyDown.length = 0;
+		this.#keyDown = new Map();
 		this.#lastKeyCode = 0;
 	}
 
@@ -167,10 +177,8 @@ export default class {
 	 */
 	isKeyDown(keyCode)
 	{
-		if(keyCode
-//			&& (this.keyDown.findIndex(keyCode) >= 0)
-		) {
-			return !!this.keyDown[keyCode];
+		if(keyCode) {
+			return !!this.#keyDown[keyCode];
 		}
 		return false;
 	}
@@ -180,7 +188,7 @@ export default class {
 	 * @returns {number|string} キーコード。押下されていなかったら0を返す。
 	 */
 	inKey() {
-		if(this.#lastKeyCode && this.keyDown[this.#lastKeyCode]) {
+		if(this.#lastKeyCode && this.#keyDown[this.#lastKeyCode]) {
 			return this.#lastKeyCode;
 		}
 		return 0;

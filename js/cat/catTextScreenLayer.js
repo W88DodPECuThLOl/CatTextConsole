@@ -78,6 +78,7 @@ export default class {
 
 	/**
 	 * テキストスクリーンのTRAMのインデックスを計算する
+	 * クリッピングする。
 	 * @param {number} x 座標
 	 * @param {number} y 座標
 	 * @returns {number} TRAMのインデックス
@@ -88,6 +89,18 @@ export default class {
 		const height = this.getScreenHeight();
 		if(x < 0) { x = 0; } else if(x >= width) { x = width - 1; }
 		if(y < 0) { y = 0; } else if(y >= height) { y = height - 1; }
+		return this.#calcTextAddressNoClip(x, y)
+	}
+	/**
+	 * テキストスクリーンのTRAMのインデックスを計算する
+	 * クリッピングしない
+	 * @param {number} x 座標
+	 * @param {number} y 座標
+	 * @returns {number} TRAMのインデックス
+	 */
+	#calcTextAddressNoClip(x, y)
+	{
+		const width = this.getScreenWidth();
 		return (x + y * width) * this.#letterSize;
 	}
 
@@ -407,10 +420,10 @@ export default class {
 	{
 		this.#isModified = true; // 変更フラグセット
 		
-		let   dstIndex = this.#calcTextAddress(begin.x, begin.y);
+		let   dstIndex = this.#calcTextAddressNoClip(begin.x, begin.y);
 		let   srcIndex = dstIndex + this.#letterSize;
-		const endIndex = this.#calcTextAddress(end.x, end.y);
-		while(srcIndex != endIndex) {
+		const endIndex = this.#calcTextAddressNoClip(end.x, end.y);
+		while(srcIndex < endIndex) {
 			this.#tram[dstIndex++] = this.#tram[srcIndex++];
 		}
 		this.#tram[dstIndex + this.#codePointIndex] = codePoint;
