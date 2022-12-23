@@ -6,6 +6,7 @@
 .console {
     font-family: 'CatTextScreenFont';
     font-size: 16px;
+    line-height: 16px;
     transform: scaleY(2);
     transform-origin: top left;
     width: 1280px;
