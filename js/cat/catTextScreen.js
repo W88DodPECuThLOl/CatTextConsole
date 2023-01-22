@@ -255,6 +255,20 @@ export default class {
 	}
 
 	/**
+	 * カーソルのある行のテキストをデコードして取得する
+	 * @param {number} layer レイヤ番号
+	 * @returns {Array} １行の文字列
+	 */
+	getLineWithDecode(layer) {
+		// デコードする
+		const ret = new Array();
+		for(let ch of this.getLine(layer)) {
+			ret.push(this.#decoder(ch.codePointAt(0)));
+		}
+		return ret;
+	}
+
+	/**
 	 * テキストが更新されたかどうかを取得する
 	 * @param {number} layer レイヤ番号
 	 * @returns {boolean} 更新された場合は true を返す
@@ -268,7 +282,17 @@ export default class {
 				}
 			}
 		} else {
-			return this.#textLayerControler[this.#defaultLayer].isModified();
+			return this.#textLayerControler[layer].isModified();
 		}
+	}
+
+	/**
+	 * カーソルを表示するかどうかを設定する
+	 * @param {boolean} display カーソルを表示するかどうか
+	 * @param {number} layer	レイヤ番号
+	 */
+	setDisplayCursor(display, layer) {
+		layer = (typeof layer === 'undefined') ? this.#defaultLayer : layer;
+		this.#textLayerControler[layer].setDisplayCursor(display);
 	}
 }
