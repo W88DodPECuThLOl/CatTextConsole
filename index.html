@@ -16,7 +16,7 @@
 			var catTextScreen = new CatTextScreen(80, 25);
 
 			// テスト
-			const initialText = "猫テキストコンソール Version 0.00.00";
+			const initialText = "猫テキストコンソール Version 0.00.01";
 			for(let chr of initialText) { catTextScreen.putch32(chr.codePointAt(0)); }
 			catTextScreen.putch32(13); // 改行
 			catTextScreen.setColor(0xFF0000); // 描画色設定 RGB
