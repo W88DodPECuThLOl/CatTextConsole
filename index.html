@@ -11,9 +11,11 @@
 		<script type="module">
 			import CatKey from './js/cat/catKey.js';
 			import CatTextScreen from './js/cat/catTextScreen.js';
+			import CatGamePad from './js/cat/catGamePad.js';
 
 			var catKey = new CatKey(document);
 			var catTextScreen = new CatTextScreen(80, 25);
+			var catGamePad = new CatGamePad(navigator);
 
 			// テスト
 			const initialText = "猫テキストコンソール Version 0.00.01";
@@ -63,6 +65,46 @@
 					// 入力されてたらテキスト画面の制御に流し込む
 					catTextScreen.putch32(keyCode);
 				}
+				// ゲームパッド更新
+				catGamePad.update();
+				// ゲームパッドからの入力 - デジタル
+				catTextScreen.setColor(0xFF8080);
+				if(catGamePad.buttons[catGamePad.BUTTON_A_INDEX].current) { catTextScreen.putch32(0x41); }
+				if(catGamePad.buttons[catGamePad.BUTTON_B_INDEX].current) { catTextScreen.putch32(0x42); }
+				if(catGamePad.buttons[catGamePad.BUTTON_X_INDEX].current) { catTextScreen.putch32(0x58); }
+				if(catGamePad.buttons[catGamePad.BUTTON_Y_INDEX].current) { catTextScreen.putch32(0x59); }
+				catTextScreen.setColor(0x80FF80);
+				if(catGamePad.buttons[catGamePad.BUTTON_LB_INDEX].current) { catTextScreen.putch32(0x4C); catTextScreen.putch32(0x42); }
+				if(catGamePad.buttons[catGamePad.BUTTON_RB_INDEX].current) { catTextScreen.putch32(0x52); catTextScreen.putch32(0x42); }
+				if(catGamePad.buttons[catGamePad.BUTTON_LT_INDEX].current) { catTextScreen.putch32(0x4C); catTextScreen.putch32(0x54); }
+				if(catGamePad.buttons[catGamePad.BUTTON_RT_INDEX].current) { catTextScreen.putch32(0x52); catTextScreen.putch32(0x54); }
+				catTextScreen.setColor(0x8080FF);
+				if(catGamePad.buttons[catGamePad.BUTTON_BACK_INDEX].current) { catTextScreen.putch32(0x42); catTextScreen.putch32(0x41); catTextScreen.putch32(0x43); catTextScreen.putch32(0x4B); }
+				if(catGamePad.buttons[catGamePad.BUTTON_START_INDEX].current) { catTextScreen.putch32(0x53); catTextScreen.putch32(0x54); catTextScreen.putch32(0x41); catTextScreen.putch32(0x52); catTextScreen.putch32(0x54); }
+				catTextScreen.setColor(0xFF80FF);
+				if(catGamePad.buttons[catGamePad.BUTTON_L3_INDEX].current) { catTextScreen.putch32(0x4C); catTextScreen.putch32(0x33); }
+				if(catGamePad.buttons[catGamePad.BUTTON_R3_INDEX].current) { catTextScreen.putch32(0x52); catTextScreen.putch32(0x33); }
+				catTextScreen.setColor(0x80FFFF);
+				if(catGamePad.buttons[catGamePad.BUTTON_UP_INDEX].current) { catTextScreen.putch32(0x55); }
+				if(catGamePad.buttons[catGamePad.BUTTON_DOWN_INDEX].current) { catTextScreen.putch32(0x44); }
+				if(catGamePad.buttons[catGamePad.BUTTON_LEFT_INDEX].current) { catTextScreen.putch32(0x4C); }
+				if(catGamePad.buttons[catGamePad.BUTTON_RIGHT_INDEX].current) { catTextScreen.putch32(0x52); }
+				catTextScreen.setColor(0x808080);
+				if(catGamePad.buttons[catGamePad.BUTTON_HOME_INDEX].current) { catTextScreen.putch32(0x48); }
+				// ゲームパッドからの入力 - アナログ
+				// 左側
+				catTextScreen.setColor(0xFF0000);
+				if(catGamePad.axis[0].x >  0.5) { catTextScreen.putch32(0x2B); catTextScreen.putch32(0x78); }
+				if(catGamePad.axis[0].y >  0.5) { catTextScreen.putch32(0x2B); catTextScreen.putch32(0x79); }
+				if(catGamePad.axis[0].x < -0.5) { catTextScreen.putch32(0x2D); catTextScreen.putch32(0x78); }
+				if(catGamePad.axis[0].y < -0.5) { catTextScreen.putch32(0x2D); catTextScreen.putch32(0x79); }
+				// 右側
+				catTextScreen.setColor(0x0000FF);
+				if(catGamePad.axis[1].x >  0.5) { catTextScreen.putch32(0x2B); catTextScreen.putch32(0x78); }
+				if(catGamePad.axis[1].y >  0.5) { catTextScreen.putch32(0x2B); catTextScreen.putch32(0x79); }
+				if(catGamePad.axis[1].x < -0.5) { catTextScreen.putch32(0x2D); catTextScreen.putch32(0x78); }
+				if(catGamePad.axis[1].y < -0.5) { catTextScreen.putch32(0x2D); catTextScreen.putch32(0x79); }
+				catTextScreen.setColor(0xFFFFFF);
 				// テキスト描画
 				if(catTextScreen.isModified()) {
 					// 変更されている時だけ描画する
